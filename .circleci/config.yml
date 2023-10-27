@@ -46,7 +46,6 @@ workflows:
             branches:
               only: /^dependabot.*/
     triggers:
-      # Schedule tests to run every 15 minutes
       - schedule:
           cron: "0 9 * * 1-5"
           filters:
