@@ -1,14 +1,55 @@
 version: 2.1
 
+orbs:
+  gh: circleci/github-cli@2.2.0
+  queue: eddiewebb/queue@2.2.1
+
 jobs:
-  hello-job:
+  Auto-merge Dependabot PR:
     docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
+      - image: cimg/base:stable
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - checkout
+      - queue/until_front_of_line:
+          only-on-branch: /^dependabot.*/
+          time: '10'
+      - gh/setup # Set up GitHub CLI
+      - run:
+          name: Check PR Mergeable and MergeStateStatus
+          command: |
+            mergeable_status=$(gh pr view --json mergeable | jq -r '.mergeable')
+            merge_state_status=$(gh pr view --json mergeStateStatus | jq -r '.mergeStateStatus')
+            if [ "$mergeable_status" != "MERGEABLE" ] || [ "$merge_state_status" = "BEHIND" ]; then
+              echo "PR has conflicts or is out of date with the base branch! Aborting job."
+              if [ "$merge_state_status" = "BEHIND" ]; then
+                echo "Rebasing the PR branch with the base branch."
+                git rebase main
+                git push -f
+              fi
+              circleci step halt
+            fi
+          when: on_fail
+      - run:
+          name: Merge PR
+          command: |
+            gh pr merge --admin --delete --rebase
+
 
 workflows:
+  version: 2
   my-workflow:
     jobs:
-      - hello-job
+      - Auto-merge Dependabot PR:
+          context:
+            - GITHUB_ACCESS
+          filters:
+            branches:
+              only: /^dependabot.*/
+    triggers:
+      # Schedule tests to run every 15 minutes
+      - schedule:
+          cron: "0 9 * * 1-5"
+          filters:
+            branches:
+              only:
+                - /^dependabot.*/
