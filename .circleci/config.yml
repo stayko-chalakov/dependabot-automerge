@@ -1,14 +1,8 @@
 version: 2.1
 
 orbs:
-  lpg-common-k8s: leisurepassgroup/common-k8s@0
   gh: circleci/github-cli@2.2.0
   queue: eddiewebb/queue@2.2.1
-
-parameters:
-  service-name:
-    type: string
-    default: dependabot-automerge
 
 commands:
   npm-install:
@@ -22,41 +16,15 @@ commands:
           name: 'npm run build'
           command: |
             npm run build
-  restore-npm-dependencies-cache:
-    parameters:
-      service-name:
-        type: string
-    steps:
-      - restore_cache:
-          name: 'Restore NPM Dependencies Cache'
-          keys:
-            - lpg-<< parameters.service-name >>-{{ checksum "package-lock.json" }}
-            - lpg-<< parameters.service-name >>-
-  save-npm-dependencies-cache:
-    parameters:
-      service-name:
-        type: string
-    steps:
-      - save_cache:
-          name: 'Save NPM Dependencies Cache'
-          key: lpg-<< parameters.service-name >>-{{ checksum "package-lock.json" }}
-          paths:
-            - ~/.npm/_cacache
-            - node_modules
-            - .next/cache
 
 jobs:
   Build:
-    executor: lpg-common-k8s/node-16-pact
+    docker:
+      - image: cimg/node:21.1.0
     steps:
       - checkout
-      - lpg-common-k8s/setup-npm-config
-      - restore-npm-dependencies-cache:
-          service-name: << pipeline.parameters.service-name >>
       - npm-install
       - npm-run-build
-      - save-npm-dependencies-cache:
-          service-name: << pipeline.parameters.service-name >>
 
   Auto-merge Dependabot PR:
     docker:
