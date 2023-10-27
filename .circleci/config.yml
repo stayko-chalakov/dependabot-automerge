@@ -45,7 +45,11 @@ workflows:
   version: 2
   Hello world:
     jobs:
-      - hello-job
+      - hello-job:
+          filters:
+            branches:
+              only: 
+                - /^dependabot.*/
   Dependabot automerge:
     jobs:
       - Auto-merge Dependabot PR:
