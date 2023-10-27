@@ -44,7 +44,8 @@ workflows:
             - GITHUB_ACCESS
           filters:
             branches:
-              only: /^dependabot.*/
+              only: 
+                - /^dependabot.*/
     # triggers:
       # - schedule:
           # cron: "0 9 * * 1-5"
