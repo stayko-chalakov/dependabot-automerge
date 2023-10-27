@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Merge PR
           command: |
-            gh pr merge --admin --delete --rebase
+            gh pr merge --admin --delete-branch --rebase
 
 
 workflows:
