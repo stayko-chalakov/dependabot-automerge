@@ -4,7 +4,28 @@ orbs:
   gh: circleci/github-cli@2.2.0
   queue: eddiewebb/queue@2.2.1
 
+commands:
+  npm-install:
+    steps:
+      - run:
+          name: 'NPM Install'
+          command: 'npm i -d' #https://jfrog.com/help/r/artifactory-how-to-troubleshoot-long-npm-install-times-with-s3-redirect-enabled/workarounds
+  npm-run-build:
+    steps:
+      - run:
+          name: 'npm run build'
+          command: |
+            npm run build
+
 jobs:
+  Build:
+    docker:
+      - image: cimg/node:16
+    steps:
+      - checkout
+      - npm-install
+      - npm-run-build
+
   Auto-merge Dependabot PR:
     docker:
       - image: cimg/base:stable
@@ -39,7 +60,10 @@ workflows:
   version: 2
   Dependabot automerge:
     jobs:
+      - Build
       - Auto-merge Dependabot PR:
+          requires:
+            - Build
           context:
             - GITHUB_ACCESS
           filters:
