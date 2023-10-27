@@ -47,7 +47,7 @@ workflows:
               only: /^dependabot.*/
     triggers:
       - schedule:
-          cron: "0 9 * * 1-5"
+          # cron: "0 9 * * 1-5"
           filters:
             branches:
               only:
