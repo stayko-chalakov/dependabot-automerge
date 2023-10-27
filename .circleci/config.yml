@@ -45,10 +45,10 @@ workflows:
           filters:
             branches:
               only: /^dependabot.*/
-    triggers:
-      - schedule:
+    # triggers:
+      # - schedule:
           # cron: "0 9 * * 1-5"
-          filters:
-            branches:
-              only:
-                - /^dependabot.*/
+          # filters:
+            # branches:
+              # only:
+                # - /^dependabot.*/
