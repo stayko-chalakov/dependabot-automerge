@@ -10,9 +10,10 @@ commands:
       - run:
           name: 'NPM Install'
           command: |
-            echo "//registry.npmjs.org/:username=${REGISTRY_USERNAME}" > ~/.npmrc
+            echo "//registry.npmjs.org/:username=${REGISTRY_EMAIL}" >> ~/.npmrc
             echo "//registry.npmjs.org/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
             echo "registry=${REGISTRY_URL}" >> ~/.npmrc
+            cat ~/npmrc
             npm i -d 
   npm-run-build:
     steps:
