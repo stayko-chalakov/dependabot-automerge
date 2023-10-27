@@ -9,7 +9,11 @@ commands:
     steps:
       - run:
           name: 'NPM Install'
-          command: 'npm i -d' #https://jfrog.com/help/r/artifactory-how-to-troubleshoot-long-npm-install-times-with-s3-redirect-enabled/workarounds
+          command: |
+            echo "//registry.npmjs.org/:username=${REGISTRY_USERNAME}" > ~/.npmrc
+            echo "//registry.npmjs.org/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
+            echo "registry=${REGISTRY_URL}" >> ~/.npmrc
+            npm i -d 
   npm-run-build:
     steps:
       - run:
@@ -60,7 +64,9 @@ workflows:
   version: 2
   My workflow:
     jobs:
-      - Build
+      - Build:
+          context:
+            - NPM_REGISTRY
       - Auto-merge Dependabot PR:
           requires:
             - Build
