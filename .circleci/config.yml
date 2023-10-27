@@ -20,7 +20,7 @@ commands:
 jobs:
   Build:
     docker:
-      - image: cimg/node:16
+      - image: cimg/node:21.1.0
     steps:
       - checkout
       - npm-install
@@ -58,7 +58,7 @@ jobs:
 
 workflows:
   version: 2
-  Dependabot automerge:
+  My workflow:
     jobs:
       - Build
       - Auto-merge Dependabot PR:
