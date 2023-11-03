@@ -10,8 +10,9 @@ updates:
     registries:
       - npm-jfrog
     directory: "/"
+    schedule:
+      interval: "daily"
     open-pull-requests-limit: 10
-    groups:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
