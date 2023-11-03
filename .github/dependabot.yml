@@ -1,0 +1,17 @@
+version: 2
+registries:
+  npm-jfrog:
+    type: npm-registry
+    url: https://lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/
+    username: ${{ secrets.JFROG_USERNAME }}
+    password: ${{ secrets.JFROG_PASSWORD }}
+updates:
+  - package-ecosystem: "npm"
+    registries:
+      - npm-jfrog
+    directory: "/"
+    open-pull-requests-limit: 10
+    groups:
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-major" ]
