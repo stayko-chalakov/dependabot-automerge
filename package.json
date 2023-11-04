@@ -84,7 +84,7 @@
     "@sentry/integrations": "^6.19.7",
     "@sentry/react": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^8.1.0",
     "abort-controller": "^3.0.0",
     "cloudinary-build-url": "^0.2.4",
     "convert-time": "^0.3.0",
