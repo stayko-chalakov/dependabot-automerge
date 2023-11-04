@@ -1,19 +1,17 @@
 version: 2
-# registries:
-  # npm-jfrog:
-    # type: npm-registry
-    # url: https://lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/
-    # username: ${{ secrets.JFROG_USERNAME }}
-    # password: ${{ secrets.JFROG_PASSWORD }}
+registries:
+  npm-jfrog:
+    type: npm-registry
+    url: https://lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/
+    username: ${{ secrets.JFROG_USERNAME }}
+    password: ${{ secrets.JFROG_PASSWORD }}
 updates:
   - package-ecosystem: "npm"
-    # registries:
-      # - npm-jfrog
+    registries:
+      - npm-jfrog
     directory: "/"
     schedule:
       interval: "daily"
-      time: "17:15"
-      timezone: "Europe/London"
     open-pull-requests-limit: 10
     ignore:
       - dependency-name: "*"
