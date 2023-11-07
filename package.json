@@ -76,7 +76,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
-    "@cloudinary/url-gen": "^1.8.0",
+    "@cloudinary/url-gen": "^1.12.1",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@magnolia/react-editor": "^1.2.2",
     "@mui/material": "^5.14.16",
