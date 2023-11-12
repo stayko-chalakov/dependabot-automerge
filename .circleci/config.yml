@@ -66,10 +66,6 @@ jobs:
           command: |
             cd .circleci
             bash check-major-bumps.sh
-      - run:
-          name: Merge PR
-          command: |
-            gh pr merge --admin --delete-branch --rebase
       - slack/notify:
           channel: Stayko
           event: pass
@@ -93,6 +89,10 @@ jobs:
             		}
             	]
             }
+      - run:
+          name: Merge PR
+          command: |
+            gh pr merge --admin --delete-branch --rebase
 
 workflows:
   version: 2
