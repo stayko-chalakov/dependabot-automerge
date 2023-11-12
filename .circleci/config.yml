@@ -61,6 +61,10 @@ jobs:
             fi
           when: on_fail
       - run:
+          name: Check for major bumps in package.json
+          command: |
+            ./check-major-bumps.sh
+      - run:
           name: Merge PR
           command: |
             gh pr merge --admin --delete-branch --rebase
