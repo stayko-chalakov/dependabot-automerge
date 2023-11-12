@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Initialize arrays to store package names and version numbers
 declare -a oldVersions
 declare -a newVersions
