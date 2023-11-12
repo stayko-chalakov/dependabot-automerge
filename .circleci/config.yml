@@ -63,10 +63,8 @@ jobs:
       - run:
           name: Check for major bumps in package.json
           command: |
-            pwd
             cd .circleci
-            ls -a
-            sh ./.circleci/check-major-bumps.sh
+            sh check-major-bumps.sh
       - run:
           name: Merge PR
           command: |
