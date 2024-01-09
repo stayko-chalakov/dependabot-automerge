@@ -16,7 +16,7 @@
     "@next/eslint-plugin-next": "^12.2.2",
     "@pact-foundation/pact": "^9.18.1",
     "@pact-foundation/pact-node": "^10.17.6",
-    "@percy/cli": "^1.27.6",
+    "@percy/cli": "^1.27.7",
     "@testing-library/dom": "^8.14.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
