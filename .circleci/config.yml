@@ -47,28 +47,13 @@ jobs:
           # time: '10'
       - gh/setup # Set up GitHub CLI
       - run:
-          name: Check PR Mergeable and MergeStateStatus
-          command: |
-            # checks for conflicts
-            mergeable=$(gh pr view --json mergeable | jq -r .mergeable)
-            echo "mergeable: $mergeable"
-            # is the current branch out-of-date with the base branch
-            merge_state_status=$(gh pr view --json mergeStateStatus | jq -r .mergeStateStatus)
-            echo "mergeStateStatus: $merge_state_status"
-            if [ "$mergeable" != "MERGEABLE" ] || [ "$merge_state_status" = "BEHIND" ]; then
-              echo "PR has conflicts or is out of date with the base branch! Aborting job."
-              if [ "$merge_state_status" = "BEHIND" ]; then
-                echo "Rebasing the PR branch with the base branch."
-                git rebase main
-                git push -f
-              fi
-              # exit and prevent any later steps from running
-              exit 1
-            fi
+          name: Check merge status
+          command: bash .circleci/check-merge-status.sh
       - run:
+          # we probably still want to fail in the case of Dependabot trying to bump a dependency to a major version, 
+          # even though the build, unit test and e2e tests may be passing (unlikely)
           name: Check for major bumps in package.json
-          command: |
-            bash .circleci/check-major-bumps.sh
+          command: bash .circleci/check-major-bumps.sh
       - slack/notify:
           channel: Stayko
           event: pass
