@@ -10,6 +10,7 @@ while read -r line; do
   version=$(echo "$line" | grep -Eo '[0-9]+' | head -n 1)
   if [ -n "$version" ]; then
     oldVersions+=("${packageName:1}$version")
+    echo "Removed: $(echo $line | sed 's/-[[:space:]]*//g')"
   fi
 done <<< "$(git diff HEAD^ HEAD -- package.json | grep -E '^\-[[:space:]]*"[^"]+":\s*"\^([1-9][0-9]*)\.[0-9]+\.[0-9]+"')"
 
@@ -19,6 +20,7 @@ while read -r line; do
   version=$(echo "$line" | grep -Eo '[0-9]+' | head -n 1)
   if [ -n "$version" ]; then
     newVersions+=("${packageName:1}$version")
+    echo "Added: $(echo $line | sed 's/+[[:space:]]*//g')"
   fi
 done <<< "$(git diff HEAD^ HEAD -- package.json | grep -E '^\+[[:space:]]*"[^"]+":\s*"\^([1-9][0-9]*)\.[0-9]+\.[0-9]+"')"
 
