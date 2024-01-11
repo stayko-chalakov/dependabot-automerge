@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   gh: circleci/github-cli@2.2.0
-  queue: eddiewebb/queue@2.2.1
+  # queue: eddiewebb/queue@2.2.1
   slack: circleci/slack@4.12.5
 
 commands:
@@ -42,9 +42,9 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - queue/until_front_of_line:
-          only-on-branch: dependabot*
-          time: '10'
+      # - queue/until_front_of_line:
+          # only-on-branch: dependabot*
+          # time: '10'
       - gh/setup # Set up GitHub CLI
       - run:
           name: Check PR Mergeable and MergeStateStatus
