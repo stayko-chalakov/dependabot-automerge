@@ -64,8 +64,7 @@ jobs:
       - run:
           name: Check for major bumps in package.json
           command: |
-            cd .circleci
-            bash check-major-bumps.sh
+            bash .circleci/check-major-bumps.sh
       - slack/notify:
           channel: Stayko
           event: pass
