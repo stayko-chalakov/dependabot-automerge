@@ -43,7 +43,7 @@ jobs:
     steps:
       - checkout
       - queue/until_front_of_line:
-          only-on-branch: /^dependabot.*/
+          only-on-branch: dependabot*
           time: '10'
       - gh/setup # Set up GitHub CLI
       - run:
@@ -58,7 +58,7 @@ jobs:
                 git rebase main
                 git push -f
               fi
-              circleci step halt
+              circleci-agent step halt
             fi
           when: on_fail
       - run:
