@@ -1,3 +1,10 @@
+# if the branch is 'dependabot/*' but the author is not dependabot[bot] then skip the rest of the steps
+author=$(git log -1 --pretty=format:'%an')
+if [ "$author" != "dependabot[bot]" ]; then
+  echo "PR is not from dependabot! Skipping..."
+  circleci step halt
+fi
+
 # checks for conflicts
 mergeable=$(gh pr view --json mergeable | jq -r .mergeable)
 echo "mergeable: $mergeable"
