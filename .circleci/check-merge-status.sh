@@ -27,11 +27,11 @@ if [  "$merge_state_status" != "BLOCKED" ]; then
   exit 0
 fi
 
-patch = $1
-minor = $2
-major = $3
+patch=$1
+minor=$2
+major=$3
 
-pr_title = $(gh pr view --json title | jq -r .title)
+pr_title=$(gh pr view --json title | jq -r .title)
 
 # Function to check if PR title contains specified keywords
 contains_keywords() {
