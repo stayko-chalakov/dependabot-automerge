@@ -38,6 +38,16 @@ jobs:
       - npm-run-build
 
   Auto-merge Dependabot PR:
+    parameters:
+      patch:
+        type: boolean
+        default: true
+      minor:
+        type: boolean
+        default: false
+      major:
+        type: boolean
+        default: false
     docker:
       - image: cimg/base:stable
     steps:
@@ -48,35 +58,35 @@ jobs:
       - gh/setup # Set up GitHub CLI
       - run:
           name: Check merge status
-          command: bash .circleci/check-merge-status.sh
-      - run:
+          command: bash .circleci/check-merge-status.sh $patch $minor $major
+      # - run:
           # we probably still want to fail in the case of Dependabot trying to bump a dependency to a major version, 
           # even though the build, unit test and e2e tests may be passing (unlikely)
-          name: Check for major bumps in package.json
-          command: bash .circleci/check-major-bumps.sh
-      - slack/notify:
-          channel: Stayko
-          event: pass
-          custom: |
-            {
-            	"blocks": [
-            		{
-            			"type": "section",
-            			"text": {
-            				"type": "mrkdwn",
-            				"text": ":robot_face: Dependabot merged a new PR to main: PR title"
-            			},
-            			"accessory": {
-            				"type": "button",
-            				"text": {
-            					"type": "plain_text",
-            					"text": "View"
-            				},
-            				"url": "https://github.com/leisurepassgroup/{$CIRCLE_PR_REPONAME}/pull/${CIRCLE_PR_NUMBER}"
-            			}
-            		}
-            	]
-            }
+          # name: Check for major bumps in package.json
+          # command: bash .circleci/check-major-bumps.sh
+      # - slack/notify:
+          # channel: Stayko
+          # event: pass
+          # custom: |
+            # {
+              # "blocks": [
+                # {
+                  # "type": "section",
+                  # "text": {
+                    # "type": "mrkdwn",
+                    # "text": ":robot_face: Dependabot merged a new PR to main: PR title"
+                  # },
+                  # "accessory": {
+                    # "type": "button",
+                    # "text": {
+                      # "type": "plain_text",
+                      # "text": "View"
+                    # },
+                    # "url": "https://github.com/leisurepassgroup/{$CIRCLE_PR_REPONAME}/pull/${CIRCLE_PR_NUMBER}"
+                  # }
+                # }
+              # ]
+            # }
       - run:
           name: Merge PR
           command: |
