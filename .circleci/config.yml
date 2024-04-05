@@ -10,7 +10,7 @@ commands:
     steps:
       - run:
           name: 'NPM Install'
-          # command: |
+          command: |
             # echo "email=${REGISTRY_EMAIL}" > ~/.npmrc
             # echo "always-auth=true" >> ~/.npmrc
             # echo "@<SCOPE>:registry=${REGISTRY_URL}" >> ~/.npmrc
