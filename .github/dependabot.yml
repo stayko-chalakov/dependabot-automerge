@@ -1,18 +1,74 @@
 version: 2
-registries:
-  npm-jfrog:
-    type: npm-registry
-    url: https://lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/
-    username: ${{ secrets.JFROG_USERNAME }}
-    password: ${{ secrets.JFROG_PASSWORD }}
 updates:
-  - package-ecosystem: "npm"
-    registries:
-      - npm-jfrog
+  - package-ecosystem: "npm" # other options are: "maven", "gradle", "pnpm", "pip", "terraform", "swift"
     directory: "/"
-    schedule:
+    schedule: # change the schedule to whatever you like
       interval: "daily"
-    open-pull-requests-limit: 10
-    ignore:
+      time: "16:32"
+      timezone: "Europe/London"
+    open-pull-requests-limit: 10 # change the max open pull requests if you like
+    groups: # IMPORTANT: don't change the below grouping otherwise auto-merge won't work
+      production-patch-version-updates:
+        dependency-type: "production"
+        applies-to: "version-updates"
+        update-types: 
+          - "patch"
+      production-minor-version-updates:
+        dependency-type: "production"
+        applies-to: "version-updates"
+        update-types: 
+          - "minor"
+      # production-major-version-updates: # comment out if you want this
+        # dependency-type: "production"
+        # applies-to: "version-updates"
+        # update-types: 
+          # - "major"
+      development-patch-version-updates:
+        dependency-type: "development"
+        applies-to: "version-updates"
+        update-types: 
+          - "patch"
+      development-minor-version-updates:
+        dependency-type: "development"
+        applies-to: "version-updates"
+        update-types: 
+          - "minor"
+      # development-major-version-updates: # comment out if you want this
+        # dependency-type: "development"
+        # applies-to: "version-updates"
+        # update-types: 
+          # - "major"
+      production-major-security-updates:
+        dependency-type: "production"
+        applies-to: "security-updates"
+        update-types: 
+          - "major"
+      production-minor-security-updates:
+        dependency-type: "production"
+        applies-to: "security-updates"
+        update-types: 
+          - "minor"
+      production-patch-security-updates:
+        dependency-type: "production"
+        applies-to: "security-updates"
+        update-types: 
+          - "patch"
+      development-major-security-updates:
+        dependency-type: "development"
+        applies-to: "security-updates"
+        update-types: 
+          - "major"
+      development-minor-security-updates:
+        dependency-type: "development"
+        applies-to: "security-updates"
+        update-types: 
+          - "minor"
+      development-patch-security-updates:
+        dependency-type: "development"
+        applies-to: "security-updates"
+        update-types: 
+          - "patch"
+    ignore: # remove block this if you want major version updates
       - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+        update-types: 
+          - "version-update:semver-major"
