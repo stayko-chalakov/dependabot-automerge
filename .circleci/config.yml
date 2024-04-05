@@ -10,16 +10,16 @@ commands:
     steps:
       - run:
           name: 'NPM Install'
-          command: |
-            echo "email=${REGISTRY_EMAIL}" > ~/.npmrc
-            echo "always-auth=true" >> ~/.npmrc
-            echo "@<SCOPE>:registry=${REGISTRY_URL}" >> ~/.npmrc
-            echo "//lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
-            echo "//lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/:username=${REGISTRY_EMAIL}" >> ~/.npmrc
-            echo "//registry.npmjs.org/:username=${REGISTRY_EMAIL}" >> ~/.npmrc
-            echo "//registry.npmjs.org/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
-            echo "registry=${REGISTRY_URL}" >> ~/.npmrc
-            cat ~/.npmrc
+          # command: |
+            # echo "email=${REGISTRY_EMAIL}" > ~/.npmrc
+            # echo "always-auth=true" >> ~/.npmrc
+            # echo "@<SCOPE>:registry=${REGISTRY_URL}" >> ~/.npmrc
+            # echo "//lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
+            # echo "//lpg.jfrog.io/artifactory/api/npm/virt-lpg-npm/:username=${REGISTRY_EMAIL}" >> ~/.npmrc
+            # echo "//registry.npmjs.org/:username=${REGISTRY_EMAIL}" >> ~/.npmrc
+            # echo "//registry.npmjs.org/:_password=${REGISTRY_PASSWORD}" >> ~/.npmrc
+            # echo "registry=${REGISTRY_URL}" >> ~/.npmrc
+            # cat ~/.npmrc
             npm i -d 
   npm-run-build:
     steps:
