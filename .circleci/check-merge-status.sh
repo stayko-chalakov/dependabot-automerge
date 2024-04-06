@@ -1,19 +1,17 @@
 #!/bin/bash
 #
 # if the branch is 'dependabot/*' but the author is not dependabot[bot] then skip the rest of the steps
-# author=$(git log -1 --pretty=format:'%an')
-# if [ "$author" != "dependabot[bot]" ]; then
-  # echo "PR is not from dependabot! Skipping..."
-  # circleci step halt
-# fi
+author=$(git log -1 --pretty=format:'%an')
+if [ "$author" != "dependabot[bot]" ]; then
+  echo "PR is not from dependabot! Skipping..."
+  circleci step halt
+fi
 
 # checks for conflicts
 mergeable=$(gh pr view --json mergeable | jq -r .mergeable)
-echo "mergeable: $mergeable"
+echo "Mergeable status is: $mergeable"
 
 if [ "$mergeable" != "MERGEABLE" ]; then
-  echo "PR status is: $mergeable instead of MERGEABLE!"
-
   if [ "$mergeable" == "UNKNOWN" ]; then
     echo "Retrying..."
     sleep 5
@@ -24,18 +22,19 @@ if [ "$mergeable" != "MERGEABLE" ]; then
       # exit and prevent any later steps from running
       exit 1
     fi
+  else
+    echo "PR status is: $mergeable instead of MERGEABLE! Aborting..."
+    exit 1
   fi
 fi
 
 # is the current branch out-of-date with the base branch
 merge_state_status=$(gh pr view --json mergeStateStatus | jq -r .mergeStateStatus)
-echo "mergeStateStatus: $merge_state_status"
+echo "Merge state status is: $merge_state_status"
 
 
 if [  "$merge_state_status" != "BLOCKED" ]; then
-  echo "PR is out of date with the base branch! Rebasing..."
-  gh pr comment $CIRCLE_PULL_REQUEST --body "@dependabot rebase"
-  # exit and prevent any later steps from running
+  echo "PR can't be merged at the moment! Merge state status is: $merge_state_status. Aborting..."
   exit 1
 fi
 
