@@ -93,10 +93,9 @@ workflows:
       - Auto-merge Dependabot PR:
           requires:
             - Build
-          parameters:
-            patch: true
-            minor: true
-            major: false
+          patch: true
+          minor: true
+          major: false
           context:
             - GITHUB_ACCESS
             - SLACK
