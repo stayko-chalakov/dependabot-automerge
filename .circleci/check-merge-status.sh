@@ -66,7 +66,7 @@ contains_keywords() {
 if [ "$patch" == "true" ]; then
   patch_keywords=("production-patch" "development-patch")
   if contains_keywords "$pr_title" "${patch_keywords[@]}"; then
-    echo "All conditions met. Proceeding with the job."
+    echo "Patch update detected. Proceeding with the job."
     exit 0
   fi
 fi
@@ -74,7 +74,7 @@ fi
 if [ "$minor" == "true" ]; then
   minor_keywords=("production-minor" "development-minor")
   if contains_keywords "$pr_title" "${minor_keywords[@]}"; then
-    echo "All conditions met. Proceeding with the job."
+    echo "Minor update detected. Proceeding with the job."
     exit 0
   fi
 fi
@@ -82,9 +82,13 @@ fi
 if [ "$major" == "true" ]; then
   major_keywords=("production-major" "development-major")
   if contains_keywords "$pr_title" "${major_keywords[@]}"; then
-    echo "All conditions met. Proceeding with the job."
+    echo "Major update detected. Proceeding with the job."
     exit 0
   fi
 fi
 
-echo "Skipping job: None of the conditions met."
+if [ "$patch" == "false" ] && [ "$minor" == "false" ] && [ "$major" == "false" ]; then
+  echo "Skipping job: None of the conditions met."
+  # ending job without failure
+  circleci-agent step halt
+fi
