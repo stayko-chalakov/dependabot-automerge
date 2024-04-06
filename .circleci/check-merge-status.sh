@@ -14,14 +14,16 @@ echo "mergeable: $mergeable"
 if [ "$mergeable" != "MERGEABLE" ]; then
   echo "PR status is: $mergeable instead of MERGEABLE!"
 
-  echo "Retrying..."
-  sleep 5
+  if [ "$mergeable" == "UNKNOWN" ]; then
+    echo "Retrying..."
+    sleep 5
 
-  if [ "$mergeable" != "MERGEABLE" ]; then
-    echo "PR status is: $mergeable instead of MERGEABLE! Aborting..."
-  
-    # exit and prevent any later steps from running
-    exit 1
+    if [ "$mergeable" != "MERGEABLE" ]; then
+      echo "PR status is: $mergeable instead of MERGEABLE! Aborting..."
+    
+      # exit and prevent any later steps from running
+      exit 1
+    fi
   fi
 fi
 
