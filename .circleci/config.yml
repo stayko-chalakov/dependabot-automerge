@@ -49,7 +49,7 @@ jobs:
       - gh/setup # Set up GitHub CLI
       - run:
           name: Check merge status
-          command: bash .circleci/check-merge-status.sh << pipeline.parameters.patch >> << pipeline.parameters.minor >> << pipeline.parameters.major >>
+          command: bash .circleci/check-merge-status.sh ${patch} ${minor} ${major}
       # - run:
           # we probably still want to fail in the case of Dependabot trying to bump a dependency to a major version, 
           # even though the build, unit test and e2e tests may be passing (unlikely)
@@ -93,6 +93,10 @@ workflows:
       - Auto-merge Dependabot PR:
           requires:
             - Build
+          parameters:
+            patch: true
+            minor: true
+            major: false
           context:
             - GITHUB_ACCESS
             - SLACK
