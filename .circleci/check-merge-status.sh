@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # if the branch is 'dependabot/*' but the author is not dependabot[bot] then skip the rest of the steps
 # author=$(git log -1 --pretty=format:'%an')
 # if [ "$author" != "dependabot[bot]" ]; then
@@ -10,9 +12,17 @@ mergeable=$(gh pr view --json mergeable | jq -r .mergeable)
 echo "mergeable: $mergeable"
 
 if [ "$mergeable" != "MERGEABLE" ]; then
-  echo "PR has conflicts! Aborting job."
-  # exit and prevent any later steps from running
-  exit 1
+  echo "PR status is: $mergeable instead of MERGEABLE!"
+
+  echo "Retrying..."
+  sleep 5
+
+  if [ "$mergeable" != "MERGEABLE" ]; then
+    echo "PR status is: $mergeable instead of MERGEABLE! Aborting..."
+  
+    # exit and prevent any later steps from running
+    exit 1
+  fi
 fi
 
 # is the current branch out-of-date with the base branch
@@ -24,14 +34,18 @@ if [  "$merge_state_status" != "BLOCKED" ]; then
   echo "PR is out of date with the base branch! Rebasing..."
   gh pr comment $CIRCLE_PULL_REQUEST --body "@dependabot rebase"
   # exit and prevent any later steps from running
-  exit 0
+  exit 1
 fi
 
 patch=$1
 minor=$2
 major=$3
-
 pr_title=$(gh pr view --json title | jq -r .title)
+
+echo "patch: $patch"
+echo "minor: $minor"
+echo "major: $major"
+echo "pr_title: $pr_title"
 
 # Function to check if PR title contains specified keywords
 contains_keywords() {
@@ -50,27 +64,27 @@ contains_keywords() {
 
 # Check conditions for skipping the job based on parameters and PR title
 if [ "$patch" == "true" ]; then
-  patch_keywords=("production-patch-version-updates" "development-patch-version-updates" "production-patch-security-updates" "development-patch-security-updates")
-  if ! contains_keywords "$pr_title" "${patch_keywords[@]}"; then
-    echo "Skipping job: Patch is true but PR doesn't update patch versions."
+  patch_keywords=("production-patch" "development-patch")
+  if contains_keywords "$pr_title" "${patch_keywords[@]}"; then
+    echo "All conditions met. Proceeding with the job."
     exit 0
   fi
 fi
 
 if [ "$minor" == "true" ]; then
-  minor_keywords=("production-minor-version-updates" "development-minor-version-updates" "production-minor-security-updates" "development-minor-security-updates")
-  if ! contains_keywords "$pr_title" "${minor_keywords[@]}"; then
-    echo "Skipping job: Minor is true but PR doesn't update minor versions."
+  minor_keywords=("production-minor" "development-minor")
+  if contains_keywords "$pr_title" "${minor_keywords[@]}"; then
+    echo "All conditions met. Proceeding with the job."
     exit 0
   fi
 fi
 
 if [ "$major" == "true" ]; then
-  major_keywords=("production-major-version-updates" "development-major-version-updates" "production-major-security-updates" "development-major-security-updates")
-  if ! contains_keywords "$pr_title" "${major_keywords[@]}"; then
-    echo "Skipping job: Major is true but PR doesn't update major versions."
+  major_keywords=("production-major" "development-major")
+  if contains_keywords "$pr_title" "${major_keywords[@]}"; then
+    echo "All conditions met. Proceeding with the job."
     exit 0
   fi
 fi
 
-echo "All conditions met. Proceeding with the job."
+echo "Skipping job: None of the conditions met."
