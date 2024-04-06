@@ -93,7 +93,7 @@ workflows:
       - Auto-merge Dependabot PR:
           requires:
             - Build
-          parameters:
+          with:
             patch: true
             minor: true
             major: false
